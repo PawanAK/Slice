@@ -6,7 +6,7 @@ const splitCalculator = require('../helper/split');
 
 exports.createGroup = async (req, res) => {
     try {
-        var newGroup = new Group(req.body)
+        let newGroup = new Group(req.body)
         //Performing validation on the input
         if (validator.notNull(newGroup.groupName) &&
             validator.currencyValidation(newGroup.groupCurrency)) {
@@ -15,13 +15,13 @@ exports.createGroup = async (req, res) => {
             Split Json is used to store the user split value (how much a person owes)
             When the Group is created all members are assigned the split value as 0    
             */
-            var splitJson = {}
+            let splitJson = {}
 
-            for (var user of newGroup.groupMembers) {
+            for (let user of newGroup.groupMembers) {
                 //Validating the group Members exist in the DB 
-                var memberCheck = await validator.userValidation(user)
+                let memberCheck = await validator.userValidation(user)
                 if (!memberCheck) {
-                    var err = new Error('Invalid member id')
+                    let err = new Error('Invalid member id')
                     err.status = 400
                     throw err
                 }
@@ -37,14 +37,14 @@ exports.createGroup = async (req, res) => {
             newGroup.split = splitJson
 
             //Validating the group Owner exist in the DB 
-            var ownerCheck = await validator.userValidation(newGroup.groupOwner)
+            let ownerCheck = await validator.userValidation(newGroup.groupOwner)
             if (!ownerCheck) {
-                var err = new Error('Invalid owner id')
+                let err = new Error('Invalid owner id')
                 err.status = 400
                 throw err
             }
 
-            var id = await Group.create(newGroup)
+            let id = await Group.create(newGroup)
             res.status(200).json({
                 status: "Success",
                 message: "Group Creation Success",
@@ -65,7 +65,7 @@ exports.viewGroup = async (req, res) => {
             _id: req.body.id
         })
         if (!group || req.body.id == null) {
-            var err = new Error('Invalid Group Id')
+            let err = new Error('Invalid Group Id')
             err.status = 400
             throw err
         }
@@ -87,7 +87,7 @@ exports.findUserGroup = async (req, res) => {
             emailId: req.body.emailId
         })
         if (!user) {
-            var err = new Error("User Id not found !")
+            let err = new Error("User Id not found !")
             err.status = 400
             throw err
         }
@@ -110,7 +110,7 @@ exports.findUserGroup = async (req, res) => {
 
 exports.makeSettlement = async (req, res) => {
     try {
-        var reqBody = new Settlement(req.body)
+        let reqBody = new Settlement(req.body)
         validator.notNull(reqBody.groupId)
         validator.notNull(reqBody.settleTo)
         validator.notNull(reqBody.settleFrom)
@@ -120,7 +120,7 @@ exports.makeSettlement = async (req, res) => {
             _id: req.body.groupId
         })
         if (!group) {
-            var err = new Error("Invalid Group Id")
+            let err = new Error("Invalid Group Id")
             err.status = 400
             throw err
         }
@@ -128,8 +128,8 @@ exports.makeSettlement = async (req, res) => {
         group.split[0][req.body.settleFrom] += req.body.settleAmount
         group.split[0][req.body.settleTo] -= req.body.settleAmount
 
-        var id = await Settlement.create(reqBody)
-        var update_response = await Group.updateOne({ _id: group._id }, { $set: { split: group.split } })
+        let id = await Settlement.create(reqBody)
+        let update_response = await Group.updateOne({ _id: group._id }, { $set: { split: group.split } })
 
 
         res.status(200).json({
@@ -147,7 +147,7 @@ exports.makeSettlement = async (req, res) => {
 }
 
 exports.addSplit = async (groupId, expenseAmount, expenseOwner, expenseMembers) => {
-    var group = await Group.findOne({
+    let group = await Group.findOne({
         _id: groupId
     })
     group.groupTotal += expenseAmount
@@ -155,7 +155,7 @@ exports.addSplit = async (groupId, expenseAmount, expenseOwner, expenseMembers) 
     expensePerPerson = expenseAmount / expenseMembers.length
     expensePerPerson = Math.round((expensePerPerson + Number.EPSILON) * 100) / 100;
     //Updating the split values per user 
-    for (var user of expenseMembers) {
+    for (let user of expenseMembers) {
         group.split[0][user] -= expensePerPerson
     }
 
@@ -178,7 +178,7 @@ exports.groupBalanceSheet = async (req, res) => {
             _id: req.body.id
         })
         if (!group) {
-            var err = new Error("Invalid Group Id")
+            let err = new Error("Invalid Group Id")
             err.status = 400
             throw err
         }
