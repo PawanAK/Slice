@@ -1,9 +1,9 @@
-const User = require('../models/user')
-const Expense = require('../models/expense')
-const Group = require('../models/group')
-const Settlement = require('../models/settlement')
+const User = require('../models/userModel')
+const Expense = require('../models/expenseModel')
+const Group = require('../models/expenseModel')
+const Settlement = require('../models/settlementModel')
 
-const logger = require('./logger')
+
 
 exports.notNull = (value) => {
     if (value)
