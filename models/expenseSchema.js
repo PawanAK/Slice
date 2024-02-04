@@ -16,15 +16,11 @@ const Expense = new mongoose.Schema({
         type: Number,
         required: true
     },
-    expenseCategory:{
+    expenseCategory: {
         type: String,
         default: "Others"
     },
-    expenseCurrency:{
-        type: String,
-        default: "INR"
-    },
-    expenseDate:{
+    expenseDate: {
         type: Date,
         default: Date.now
     },
@@ -41,10 +37,10 @@ const Expense = new mongoose.Schema({
         required: true
     },
     expenseType: {
-        type: String, 
+        type: String,
         default: "Cash"
     }
 })
 
 
-module.exports = mongoose.model('expense', expenseSchema);
+module.exports = mongoose.model('expense', Expense);

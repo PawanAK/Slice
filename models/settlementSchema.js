@@ -23,4 +23,4 @@ const Settlement = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('settlement', settlementSchema);
+module.exports = mongoose.model('settlement', Settlement);
